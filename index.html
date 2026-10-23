@@ -141,6 +141,9 @@
   .slide.active .table tbody tr:nth-child(6) { animation-delay: 0.6s; } .slide.active .table tbody tr:nth-child(7) { animation-delay: 0.72s; }
   .slide.active .table tbody tr:nth-child(8) { animation-delay: 0.84s; }
   .table-note { margin: 10px 0 0; font-size: 0.8rem; color: var(--muted); }
+  /* On a narrow screen the wide tables scroll sideways inside their card instead of pushing the slide wider */
+  .table-wrap { width: 100%; overflow-x: auto; border-radius: 16px; -webkit-overflow-scrolling: touch; }
+  .table-wrap .table { min-width: 720px; }
   .full { grid-column: 1 / -1; width: 100%; }
 
   /* The one-sentence claim */
@@ -374,7 +377,7 @@
         <h2><span class="line"><span>Who already does part of this.</span></span></h2>
       </div>
       <div class="full">
-        <table class="table" aria-label="Innovation evidence matrix">
+        <div class="table-wrap"><table class="table" aria-label="Innovation evidence matrix">
           <thead><tr><th>Alternative</th><th>Target user</th><th>What it does</th><th>Strength</th><th>Weakness</th><th>Our difference</th></tr></thead>
           <tbody>
             <tr><td>Talking Statues<br><small>Copenhagen 2013 · 11 cities</small></td><td>City visitors</td><td>NFC/QR plaque on ~35 chosen statues plays a recorded monologue</td><td>Physical, charming, proven in 11 cities</td><td>Hand-picked few; one language; no map, recognition, 3D or collection; project-based</td><td>Every statue of the city, generated from open data; seven languages</td></tr>
@@ -384,7 +387,7 @@
             <tr><td>Do nothing<br><small>search on the phone</small></td><td>Everyone today</td><td>Type the name you can't read</td><td>Free, always there</td><td>2–3 minutes, often wrong statue or wrong person</td><td>Answer in under five seconds, standing there</td></tr>
             <tr class="us"><td>TapTales</td><td>City visitors; cities pay</td><td>Tap or photograph any statue → story, voice, 3D/AR, collection, map</td><td>Whole city from open data in weeks; no app to install</td><td>Plaques need a permit; prototype in one city</td><td>The combination, city-wide, generated for any city</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="table-note">Sources: Talking Statues (talkingstatues.com, University of Leicester RCMG), Smartify (CORDIS 781928), app stores, Google Patents search Oct 2026.</p>
       </div>
     </div>
@@ -505,7 +508,7 @@
         <h2><span class="line"><span>What would prove us wrong.</span></span></h2>
       </div>
       <div class="full">
-        <table class="table" aria-label="Validation log">
+        <div class="table-wrap"><table class="table" aria-label="Validation log">
           <thead><tr><th>We believe…</th><th>Test</th><th>Metric</th><th>Pass</th><th>If it fails</th></tr></thead>
           <tbody>
             <tr><td>Visitors tap or scan when a plaque invites them</td><td>Operational: 40 plaques per pilot city, 3 months</td><td>Taps + scans per plaque per day; share of visitors who open a second statue</td><td>≥ 5 / day on the headline statues; ≥ 40 % open a second</td><td>Redesign the plaque and placement; QR-first</td></tr>
@@ -514,7 +517,7 @@
             <tr><td>Cities will pay for onboarding + licence</td><td>Willingness to pay: offer to 10 cities and tourism boards with pilot data</td><td>Signed letters of interest; first licence</td><td>≥ 3 LOIs, 1 licence by month 12</td><td>Switch to sponsor-funded routes and heritage grants</td></tr>
             <tr><td>Visitors find it worth it</td><td>Usability: 300 visitors, in-app survey + observation</td><td>Satisfaction; completion of a statue page</td><td>≥ 4 / 5; ≥ 70 % finish the story</td><td>Shorten stories, voice first</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="table-note">The cheapest test that answers each question. Every decision is continue, change or stop; a failed hypothesis is a result, not a failure of the project.</p>
       </div>
     </div>
@@ -616,7 +619,7 @@
         <h2><span class="line"><span>Loss in the grant year, profit from year 3.</span></span></h2>
       </div>
       <div class="full">
-        <table class="table" aria-label="Five-year financial forecast" id="forecast"></table>
+        <div class="table-wrap"><table class="table" aria-label="Five-year financial forecast" id="forecast"></table></div>
         <p class="table-note" id="forecast-note"></p>
       </div>
     </div>
@@ -801,6 +804,10 @@
       if (e.target.closest('button, a, table')) return;
       var x = e.clientX / window.innerWidth;
       if (x > 0.7) go(current + 1); else if (x < 0.3) go(current - 1);
+    });
+    window.addEventListener('hashchange', function () {
+      var j = slides.findIndex(function (s) { return s.id === location.hash.replace('#', ''); });
+      if (j > -1 && j !== current) go(j);
     });
     var h = (location.hash || '').replace('#', '');
     var idx = slides.findIndex(function (s) { return s.id === h; });

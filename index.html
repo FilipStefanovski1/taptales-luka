@@ -399,7 +399,7 @@
       <div class="text" style="text-align:center">
         <p class="eyebrow">2 · The innovation claim in one sentence</p>
         <h2><span class="line"><span>What is actually new.</span></span></h2>
-        <p class="claim">For <b>city visitors</b> who struggle to learn who a statue shows and why, <b>TapTales</b> differs from <u>Talking Statues</u> and <u>Smartify</u> by <b>generating a complete guide for every statue of any city from open data</b>, delivered by a physical tap or an on-device photo match, creating <b>a city-wide guide in weeks instead of 35 hand-picked statues in years</b>, free for the visitor and cheaper than a custom app for the city.</p>
+        <p class="claim">For <b>city visitors</b> who can't learn who a statue shows and why, <b>TapTales</b> differs from <u>Talking Statues</u> (35 hand-picked statues, years of production per city) and <u>Smartify</u> (venues must upload their collection to a server) by <b>compiling the complete statue guide of any city from open data, including the photo-recognition set the phone uses offline</b>, so a city goes live <b>in weeks, with a plaque at every statue</b>, free for the visitor and cheaper than a custom app for the city.</p>
       </div>
     </div>
   </section>
@@ -409,15 +409,15 @@
     <div class="slide__inner has-figure">
       <div class="text">
         <p class="eyebrow">2 · Type and level of novelty</p>
-        <h2><span class="line"><span>Each part exists.</span></span><span class="line"><span>The combination,</span></span><span class="line"><span>city-wide, does not.</span></span></h2>
-        <p class="sub">We claim the combination and the process, never the parts.</p>
+        <h2><span class="line"><span>What we claim.</span></span><span class="line"><span>What we don't.</span></span></h2>
+        <p class="sub">Search for the parts and you will find them. Search for the compiler and you won't.</p>
       </div>
       <div class="figure">
         <ul class="doors four" aria-label="Classification of the innovation">
-          <li><b>Product / service innovation</b><span>a guide that covers every statue of a city, with tap, photo, voice, 3D/AR and a collection</span></li>
-          <li><b>Process innovation</b><span>an open pipeline (OpenStreetMap + Wikidata + Commons + Wikipedia) that generates a city in weeks, not months of curation</span></li>
-          <li><b>Business-model innovation</b><span>free for visitors; cities pay a per-city onboarding and licence instead of building their own app</span></li>
-          <li><b>Level: new to the world for the combination</b><span>incremental for every single part. Degree of change: a capability leap for small and mid-sized cities that could never afford a guide</span></li>
+          <li class="ok"><b>We claim: the city compiler · process innovation, new to the world</b><span>one automated pipeline turns a city's open data (OpenStreetMap, Wikidata, Wikimedia Commons, Wikipedia) into a finished guide for <em>every</em> statue: facts, photos, stories, walks, the plaque list, and the <em>recognition set the phone matches offline</em>. No product generates the recognition set per city; Smartify needs each venue to upload, Talking Statues hand-writes 35.</span></li>
+          <li class="ok"><b>We claim: physical-proof collection · product innovation</b><span>a statue counts only after a tap on its plaque or a photo match at the spot, across cities; GPS proximity never counts. Location games (Munzee) have codes, not heritage content.</span></li>
+          <li class="warn"><b>We don't claim</b><span>an NFC plaque on a statue (Talking Statues, 2013), photo recognition of artworks (Smartify), AR of monuments (research prototypes), audio tours (izi.TRAVEL). These are known parts we reuse.</span></li>
+          <li><b>Level and degree</b><span>new to the world for the compiler and the combination; incremental for each part. A capability leap for small and mid-sized cities that could never afford a curated guide.</span></li>
         </ul>
       </div>
     </div>
@@ -480,6 +480,24 @@
         </ol>
         <p class="arch-key"><span><i style="background:#a8722e"></i>where the novelty lives</span><span><i style="background:var(--bronze)"></i>standard components</span><span><i style="background:#fff;border:1.5px solid var(--bronze)"></i>external</span><span>Hardest uncertainty: recognition accuracy outdoors in bad light, and whether the pipeline holds in cities with thin Wikidata coverage.</span></p>
       </div>
+    </div>
+  </section>
+
+  <!-- 9b How a city is compiled: the step-by-step that makes the claim doable 1:1 -->
+  <section class="slide dense" id="s9b">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">4 · The city compiler, step by step <small>every step already runs for Skopje</small></p>
+        <h2><span class="line"><span>Give it a city name. Get a guide.</span></span></h2>
+      </div>
+      <ul class="doors six wide full" aria-label="Pipeline steps">
+        <li><b>1 · Boundary and statues</b><span>the city polygon from OpenStreetMap; an Overpass query for <em>tourism=artwork</em> (statue, sculpture, bust) and <em>historic=memorial / monument</em> inside it. Skopje: 142 found, 20 excluded by rules (plaques, graffiti, cemeteries) → <em>122</em></span></li>
+        <li><b>2 · Link and facts</b><span>the <em>wikidata=*</em> tag, else a name match on Wikidata inside the city; the subject (“commemorates”) gives the person. Facts from Wikidata: year, height, material, sculptor, portrait, dates</span></li>
+        <li><b>3 · Photos and stories</b><span>Commons geosearch within 100 m plus name search, licence filter and a reject list; Wikipedia summaries in the local language and English as the draft a local historian reviews. Skopje: <em>102 of 122</em> statues with usable photos</span></li>
+        <li><b>4 · Recognition set</b><span>3–5 reference photos per statue → DINOv2-small embeddings → one <em>embeddings.json</em> per city (344 references, under 1 MB). The phone compares its photo on-device, offline; no server, no upload</span></li>
+        <li><b>5 · Walks, numbers, plaques</b><span>thematic walks from the subject class (antiquity, revolution, art…), routed over OSM footways; collection numbers; the plaque list with one link per statue (<em>#/tag/id</em>) sent to print</span></li>
+        <li><b>6 · Publish</b><span>static files (GeoJSON, content JSON, embeddings, 3D) to a CDN; the same PWA serves every city. Machine time: minutes. Human time: the historian's review, ~2 weeks per 120 statues</span></li>
+      </ul>
     </div>
   </section>
 

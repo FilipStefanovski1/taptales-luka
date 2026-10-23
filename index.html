@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f4f9">
+<link rel="icon" href="logo/taptales-icon-192.png">
+<link rel="apple-touch-icon" href="logo/taptales-icon-192.png">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>TapTales World · Innovations in ICT</title>
+<meta name="description" content="TapTales World: a tap-and-tell guide for the statues of any city, built from open data. Project pitch by Luka Manojlovski for the FINKI course Innovations in ICT.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;800&display=swap">
+<style>
+  /* Same deck system as the Skopje pitch: one full-screen slide per idea, app palette, one animated object per slide.
+     This version follows the course's chain: problem → alternatives → innovation → value → feasibility → validation → business → project → finance. */
+  :root {
+    --bg: #f4f4f9;
+    --bg-2: #e6eaf0;
+    --fg: #000000;
+    --muted: #586f7c;
+    --bronze: #2f4550;
+    --patina: #586f7c;
+    --wash: #b8dbd9;
+    --line: rgba(47, 69, 80, 0.16);
+    --display: "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+    --body: "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+  }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); overflow: hidden; }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  .deck { height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+  .deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    position: relative; min-height: 100%;
+    scroll-snap-align: start; scroll-snap-stop: always;
+    display: grid; grid-template-rows: 1fr auto 1fr;
+    padding-block: clamp(24px, 5vh, 56px);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    overflow: hidden; isolation: isolate;
+  }
+  .slide__inner { grid-row: 2; width: min(100%, 1100px); margin-inline: auto; display: grid; gap: clamp(20px, 4vh, 40px); align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 820px) {
+    .slide__inner.has-figure { grid-template-columns: 1.1fr 0.9fr; gap: 64px; }
+    .slide__inner.has-figure.figure-left { grid-template-columns: 0.9fr 1.1fr; }
+    .slide__inner.has-figure.figure-left .text { order: 2; }
+    .slide__inner.has-figure.wide { grid-template-columns: 0.8fr 1.2fr; }
+  }
+
+  .eyebrow { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); margin: 0 0 clamp(14px, 2.4vh, 24px); }
+  .eyebrow small { font-weight: 400; letter-spacing: 0.06em; text-transform: none; color: var(--muted); margin-left: 10px; }
+  h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(3.2rem, 11vw, 9rem); }
+  h2 { font-size: clamp(2rem, 5.4vw, 4.6rem); }
+  .dense h2 { font-size: clamp(1.8rem, 4.2vw, 3.4rem); }
+  .sub { font-weight: 400; font-size: clamp(1.15rem, 2.3vw, 1.9rem); line-height: 1.22; letter-spacing: -0.01em; color: var(--muted); margin: clamp(14px, 2.4vh, 26px) 0 0; text-wrap: balance; max-width: 28ch; }
+  .logo { width: clamp(96px, 17vh, 170px); height: auto; display: block; margin: 0 auto clamp(10px, 2vh, 20px); }
+  .slide.active .logo { animation: pop 0.7s cubic-bezier(0.3, 1.4, 0.4, 1) both; }
+  .accent { color: var(--bronze); }
+  .bronze-word { color: #a8722e; }
+  .byline { margin: clamp(18px, 4vh, 36px) 0 0; font-size: 1rem; color: var(--muted); letter-spacing: 0.02em; }
+  .byline b { color: var(--fg); font-weight: 500; }
+
+  .line { display: block; overflow: hidden; }
+  .line > span { display: inline-block; }
+  .slide.active .line > span { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both; }
+  .slide.active .line:nth-child(2) > span { animation-delay: 0.1s; }
+  .slide.active .line:nth-child(3) > span { animation-delay: 0.2s; }
+  .slide.active .sub, .slide.active .byline { animation: fade 0.8s 0.45s ease both; }
+  .slide.active .eyebrow { animation: fade 0.6s ease both; }
+  @keyframes rise { from { transform: translateY(110%); } to { transform: none; } }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+
+  .figure { display: grid; place-items: center; min-width: 0; }
+  .figure svg { width: 100%; height: auto; max-width: 440px; overflow: visible; }
+
+  .ripple-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; display: grid; place-items: center; }
+  .ripple-bg i { position: absolute; width: 42vmin; height: 42vmin; border-radius: 50%; border: 1px solid var(--bronze); opacity: 0; }
+  .slide.active .ripple-bg i { animation: ripple 4.5s ease-out infinite; }
+  .ripple-bg i:nth-child(2) { animation-delay: 1.5s !important; }
+  .ripple-bg i:nth-child(3) { animation-delay: 3s !important; }
+  @keyframes ripple { 0% { transform: scale(0.4); opacity: 0.55; } 100% { transform: scale(3); opacity: 0; } }
+
+  /* Problem: a field of marks, almost all dim */
+  .marks { display: grid; grid-template-columns: repeat(16, 1fr); gap: 7px; width: 100%; max-width: 440px; }
+  .marks i { aspect-ratio: 1; border-radius: 50%; background: var(--wash); transform: scale(0.6); opacity: 0; }
+  .slide.active .marks i { animation: pop 0.5s cubic-bezier(0.3, 1.4, 0.4, 1) both; }
+  .marks i.lit { background: var(--bronze); }
+
+  /* Photos */
+  .photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: var(--bg-2); box-shadow: 0 8px 28px rgba(47, 69, 80, 0.18), 0 1px 2px rgba(47, 69, 80, 0.08); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) contrast(1.02); transform: scale(1.06); }
+  .slide.active .photo img { animation: settle 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  @keyframes settle { from { transform: scale(1.14); opacity: 0; } to { transform: scale(1.06); opacity: 1; } }
+  .photo::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px var(--line); border-radius: inherit; pointer-events: none; }
+  .photo .credit { position: absolute; left: 12px; bottom: 10px; font-size: 0.75rem; letter-spacing: 0.04em; color: rgba(244,244,249,0.85); text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+  .photo .rings { position: absolute; inset: 0; display: grid; place-items: center; }
+  .photo .rings i { position: absolute; width: 60%; aspect-ratio: 1; border-radius: 50%; border: 1.5px solid var(--wash); opacity: 0; }
+  .slide.active .photo .rings i { animation: ring 2.4s ease-out infinite; }
+  .photo .rings i:nth-child(2) { animation-delay: 0.8s !important; }
+  .photo .rings i:nth-child(3) { animation-delay: 1.6s !important; }
+  .photo .rings.small { inset: auto; width: 30%; aspect-ratio: 1; transform: translate(-50%, -50%); }
+  .photo .rings.small i { width: 100%; border-width: 2px; }
+  .photo .rings.small b { width: 10px; height: 10px; box-shadow: 0 0 0 4px rgba(184,219,217,0.45); }
+  .photo .rings b { width: 14px; height: 14px; border-radius: 50%; background: var(--wash); box-shadow: 0 0 0 6px rgba(184,219,217,0.35); }
+  @keyframes ring { 0% { transform: scale(0.3); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+  .photo .bars { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; padding-bottom: 28px; background: linear-gradient(to top, rgba(15,14,12,0.85), transparent); }
+  .photo .bars i { width: 10px; border-radius: 6px; background: #f4f4f9; height: 60%; transform: scaleY(0.25); transform-origin: bottom; }
+  .slide.active .photo .bars i { animation: bar 1.2s ease-in-out infinite alternate; }
+  @keyframes bar { from { transform: scaleY(0.18); } to { transform: scaleY(var(--h, 1)); } }
+
+  /* Product: four tiles of the app */
+  .product { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; max-width: 480px; }
+  .product li { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: var(--bg-2); opacity: 0; box-shadow: 0 6px 20px rgba(47,69,80,0.16); }
+  .slide.active .product li { animation: pop 0.5s cubic-bezier(0.3, 1.4, 0.4, 1) both; }
+  .slide.active .product li:nth-child(2) { animation-delay: 0.15s; } .slide.active .product li:nth-child(3) { animation-delay: 0.3s; } .slide.active .product li:nth-child(4) { animation-delay: 0.45s; }
+  .product img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.8); }
+  .product span { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 12px 10px; font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: #f4f4f9; background: linear-gradient(to top, rgba(15,14,12,0.85), transparent); letter-spacing: -0.01em; }
+  .product small { display: block; font-family: var(--body); font-weight: 400; font-size: 0.78rem; opacity: 0.9; }
+
+  /* Tables: evidence matrix, forecast, validation log */
+  .table { width: 100%; border-collapse: collapse; font-size: clamp(0.72rem, 1.1vw, 0.92rem); line-height: 1.3; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 24px rgba(47,69,80,0.14); }
+  .table th, .table td { padding: 9px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .table th { background: var(--bronze); color: #f4f4f9; font-weight: 500; letter-spacing: 0.04em; font-size: 0.72em; text-transform: uppercase; }
+  .table tr:last-child td { border-bottom: 0; }
+  .table td:first-child { font-weight: 700; white-space: nowrap; }
+  .table tr.us td { background: var(--wash); font-weight: 500; }
+  .table tr.us td:first-child { font-weight: 800; }
+  .table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .table .neg { color: #b5483f; }
+  .table tr.total td { border-top: 2px solid var(--bronze); font-weight: 700; }
+  .table tbody tr { opacity: 0; }
+  .slide.active .table tbody tr { animation: fade 0.5s ease both; }
+  .slide.active .table tbody tr:nth-child(2) { animation-delay: 0.12s; } .slide.active .table tbody tr:nth-child(3) { animation-delay: 0.24s; }
+  .slide.active .table tbody tr:nth-child(4) { animation-delay: 0.36s; } .slide.active .table tbody tr:nth-child(5) { animation-delay: 0.48s; }
+  .slide.active .table tbody tr:nth-child(6) { animation-delay: 0.6s; } .slide.active .table tbody tr:nth-child(7) { animation-delay: 0.72s; }
+  .slide.active .table tbody tr:nth-child(8) { animation-delay: 0.84s; }
+  .table-note { margin: 10px 0 0; font-size: 0.8rem; color: var(--muted); }
+  .full { grid-column: 1 / -1; width: 100%; }
+
+  /* The one-sentence claim */
+  .claim { margin: clamp(18px, 4vh, 36px) auto 0; max-width: 980px; padding: clamp(18px, 3vh, 32px) clamp(20px, 3vw, 40px); background: #ffffff; border-radius: 22px; border-left: 6px solid var(--bronze); box-shadow: 0 8px 28px rgba(47, 69, 80, 0.14); font-family: var(--display); font-size: clamp(1.15rem, 2.4vw, 2rem); line-height: 1.3; letter-spacing: -0.015em; text-align: left; opacity: 0; }
+  .claim b { color: var(--bronze); font-weight: 800; }
+  .claim u { text-decoration: none; border-bottom: 3px solid var(--wash); }
+  .slide.active .claim { animation: fade 0.8s 0.5s ease both; }
+
+  /* Cards (doors), reused everywhere a list of 3–6 things is needed */
+  .doors { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; width: 100%; max-width: 460px; }
+  .doors li { display: grid; gap: 4px; padding: 16px 18px; border-radius: 16px; background: #ffffff; border: 1px solid var(--line); border-left: 4px solid var(--bronze); opacity: 0; }
+  .doors b { font-family: var(--display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .doors span { font-size: 0.92rem; color: var(--muted); line-height: 1.35; }
+  .doors.four, .doors.six { gap: 10px; }
+  .doors.four li, .doors.six li { padding: 12px 16px; }
+  .doors.four b, .doors.six b { font-size: 1.05rem; }
+  .doors.four span, .doors.six span { font-size: 0.86rem; }
+  .doors.six { max-width: 560px; grid-template-columns: 1fr 1fr; }
+  .doors.wide { max-width: none; }
+  .doors li.warn { border-left-color: #b5483f; }
+  .doors li.ok { border-left-color: #3f8f86; }
+  .doors em { font-style: normal; color: var(--fg); font-weight: 500; }
+  .slide.active .doors li { animation: fade 0.6s ease both; }
+  .slide.active .doors li:nth-child(2) { animation-delay: 0.2s; } .slide.active .doors li:nth-child(3) { animation-delay: 0.4s; }
+  .slide.active .doors li:nth-child(4) { animation-delay: 0.6s; } .slide.active .doors li:nth-child(5) { animation-delay: 0.8s; }
+  .slide.active .doors li:nth-child(6) { animation-delay: 1s; }
+  @media (max-width: 600px) { .doors.six { grid-template-columns: 1fr; } }
+
+  /* Value: baseline → target */
+  .metrics { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; max-width: 520px; }
+  .metrics li { display: grid; grid-template-columns: 1.2fr 1fr auto 1fr; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 16px; background: #ffffff; border: 1px solid var(--line); opacity: 0; font-size: 0.9rem; }
+  .metrics li > span:first-child { font-weight: 700; color: var(--fg); }
+  .metrics .base { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(181,72,63,0.6); }
+  .metrics .arrow { color: var(--bronze); font-weight: 800; }
+  .metrics .target { font-family: var(--display); font-weight: 800; color: var(--bronze); font-size: 1.05rem; }
+  .slide.active .metrics li { animation: fade 0.5s ease both; }
+  .slide.active .metrics li:nth-child(2) { animation-delay: 0.15s; } .slide.active .metrics li:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .metrics li:nth-child(4) { animation-delay: 0.45s; } .slide.active .metrics li:nth-child(5) { animation-delay: 0.6s; }
+
+  /* Architecture: a chain of boxes */
+  .arch { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; width: 100%; position: relative; }
+  .arch::before { content: ""; position: absolute; left: 4%; right: 4%; top: 28px; height: 2px; background: var(--wash); z-index: 0; }
+  .arch li { position: relative; z-index: 1; display: grid; gap: 6px; align-content: start; opacity: 0; }
+  .arch b { display: grid; place-items: center; min-height: 56px; padding: 8px; border-radius: 14px; background: var(--bronze); color: #f4f4f9; font-family: var(--display); font-weight: 800; font-size: 0.86rem; text-align: center; letter-spacing: -0.01em; line-height: 1.1; }
+  .arch li.novel b { background: #a8722e; }
+  .arch li.ext b { background: #ffffff; color: var(--fg); border: 1.5px solid var(--bronze); }
+  .arch span { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+  .slide.active .arch li { animation: fade 0.5s ease both; }
+  .slide.active .arch li:nth-child(2) { animation-delay: 0.15s; } .slide.active .arch li:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .arch li:nth-child(4) { animation-delay: 0.45s; } .slide.active .arch li:nth-child(5) { animation-delay: 0.6s; } .slide.active .arch li:nth-child(6) { animation-delay: 0.75s; }
+  .arch-key { margin: 14px 0 0; font-size: 0.82rem; color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
+  .arch-key i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; }
+  @media (max-width: 819px) { .arch { grid-template-columns: repeat(3, 1fr); } .arch::before { display: none; } }
+
+  /* Stages: concept → ready */
+  .stages { list-style: none; margin: clamp(20px, 4vh, 40px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .stages li { padding: 14px 12px; border-radius: 16px; background: #ffffff; border: 1px solid var(--line); text-align: center; opacity: 0; display: grid; gap: 4px; }
+  .stages b { font-family: var(--display); font-weight: 800; font-size: 1rem; letter-spacing: 0.02em; }
+  .stages span { font-size: 0.8rem; color: var(--muted); line-height: 1.3; }
+  .stages li.done { background: var(--wash); border-color: transparent; }
+  .stages li.now { background: var(--bronze); color: #f4f4f9; border-color: transparent; box-shadow: 0 8px 24px rgba(47,69,80,0.3); }
+  .stages li.now span { color: rgba(244,244,249,0.85); }
+  .stages li.next { border: 2px dashed var(--bronze); }
+  .slide.active .stages li { animation: fade 0.5s ease both; }
+  .slide.active .stages li:nth-child(2) { animation-delay: 0.15s; } .slide.active .stages li:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .stages li:nth-child(4) { animation-delay: 0.45s; } .slide.active .stages li:nth-child(5) { animation-delay: 0.6s; }
+  @media (max-width: 700px) { .stages { grid-template-columns: 1fr 1fr; } }
+
+  /* Business model canvas, compact */
+  .canvas { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto auto; gap: 8px; width: 100%; font-size: 0.8rem; line-height: 1.3; }
+  .canvas div { padding: 10px 12px; border-radius: 14px; background: #ffffff; border: 1px solid var(--line); opacity: 0; }
+  .canvas b { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bronze); margin-bottom: 4px; }
+  .canvas .vp { grid-row: 1 / 3; background: var(--wash); border-color: transparent; font-weight: 500; }
+  .canvas .tall { grid-row: 1 / 3; }
+  .canvas .bottom { grid-column: span 2; }
+  .canvas .bottom.wide3 { grid-column: span 3; }
+  .slide.active .canvas div { animation: fade 0.5s ease both; }
+  .slide.active .canvas div:nth-child(n+2) { animation-delay: 0.12s; } .slide.active .canvas div:nth-child(n+4) { animation-delay: 0.24s; }
+  .slide.active .canvas div:nth-child(n+6) { animation-delay: 0.36s; } .slide.active .canvas div:nth-child(n+8) { animation-delay: 0.48s; }
+  @media (max-width: 819px) { .canvas { grid-template-columns: 1fr 1fr; grid-template-rows: none; } .canvas .vp, .canvas .tall { grid-row: auto; } .canvas .bottom, .canvas .bottom.wide3 { grid-column: span 2; } }
+
+  /* Market formula */
+  .formula { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; align-items: stretch; }
+  .formula div { padding: 14px; border-radius: 16px; background: #ffffff; border: 1px solid var(--line); border-top: 4px solid var(--bronze); opacity: 0; display: grid; gap: 4px; align-content: start; }
+  .formula b { font-family: var(--display); font-weight: 800; font-size: clamp(1.1rem, 2vw, 1.6rem); letter-spacing: -0.02em; color: var(--bronze); }
+  .formula span { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+  .formula small { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .formula div.result { border-top-color: #a8722e; background: var(--wash); }
+  .slide.active .formula div { animation: fade 0.5s ease both; }
+  .slide.active .formula div:nth-child(2) { animation-delay: 0.15s; } .slide.active .formula div:nth-child(3) { animation-delay: 0.3s; }
+  .slide.active .formula div:nth-child(4) { animation-delay: 0.45s; } .slide.active .formula div:nth-child(5) { animation-delay: 0.7s; }
+  @media (max-width: 700px) { .formula { grid-template-columns: 1fr 1fr; } }
+
+  /* Budget rows */
+  .cost { width: 100%; max-width: 480px; display: grid; }
+  .cost .row { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; color: var(--muted); opacity: 0; }
+  .cost .row small { display: block; font-size: 0.78rem; color: var(--muted); opacity: 0.85; }
+  .cost .row b { font-variant-numeric: tabular-nums; color: var(--fg); font-weight: 500; white-space: nowrap; }
+  .cost .row.total { border-bottom: 0; border-top: 2px solid var(--bronze); margin-top: 6px; padding-top: 14px; color: var(--fg); }
+  .cost .row.total b { font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--bronze); }
+  .slide.active .cost .row { animation: fade 0.5s ease both; }
+  .slide.active .cost .row:nth-child(2) { animation-delay: 0.1s; } .slide.active .cost .row:nth-child(3) { animation-delay: 0.2s; }
+  .slide.active .cost .row:nth-child(4) { animation-delay: 0.3s; } .slide.active .cost .row:nth-child(5) { animation-delay: 0.4s; }
+  .slide.active .cost .row:nth-child(6) { animation-delay: 0.5s; } .slide.active .cost .row:nth-child(7) { animation-delay: 0.6s; }
+  .slide.active .cost .row:nth-child(8) { animation-delay: 0.9s; }
+
+  /* Timeline */
+  .timeline { list-style: none; margin: clamp(28px, 6vh, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: var(--wash); }
+  .timeline::after { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 2px; background: var(--bronze); transform: scaleX(0); transform-origin: left; }
+  .slide.active .timeline::after { animation: grow 2.2s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  @keyframes grow { to { transform: scaleX(1); } }
+  .timeline li { display: grid; gap: 8px; align-content: start; min-width: 0; opacity: 0; }
+  .timeline i { width: 16px; height: 16px; border-radius: 50%; background: #ffffff; border: 3px solid var(--bronze); box-sizing: border-box; }
+  .timeline li:last-child i { background: var(--bronze); box-shadow: 0 0 0 5px var(--wash); }
+  .timeline b { font-family: var(--display); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.01em; }
+  .timeline b small { display: block; font-family: var(--body); font-weight: 400; font-size: 0.78rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .timeline span { font-size: 0.9rem; color: var(--muted); line-height: 1.35; }
+  .timeline span em { font-style: normal; color: var(--fg); font-weight: 500; display: block; margin-top: 4px; }
+  .slide.active .timeline li { animation: fade 0.5s ease both; }
+  .slide.active .timeline li:nth-child(2) { animation-delay: 0.5s; } .slide.active .timeline li:nth-child(3) { animation-delay: 1s; } .slide.active .timeline li:nth-child(4) { animation-delay: 1.5s; }
+  @media (max-width: 819px) {
+    .timeline { grid-template-columns: 1fr; gap: 18px; padding-left: 28px; }
+    .timeline::before, .timeline::after { left: 7px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; }
+    .timeline::after { transform: scaleY(0); transform-origin: top; }
+    @keyframes grow { to { transform: scaleY(1); } }
+    .timeline li { position: relative; }
+    .timeline i { position: absolute; left: -28px; top: 2px; }
+  }
+
+  /* World map */
+  .world { width: 100%; max-width: 900px; }
+  .world svg { width: 100%; height: auto; max-height: 56vh; }
+  .w-land { fill: #ffffff; stroke: var(--bronze); stroke-width: 0.6; stroke-linejoin: round; opacity: 0; }
+  .slide.active .w-land { animation: fade 1.2s ease both; }
+  .w-city { opacity: 0; }
+  .slide.active .w-city { animation: pop 0.5s cubic-bezier(0.3, 1.4, 0.4, 1) both; transform-box: fill-box; transform-origin: center; }
+  .w-city circle { fill: var(--bronze); stroke: #ffffff; stroke-width: 1.2; }
+  .w-city text { font-size: 10px; fill: var(--muted); paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round; }
+  .w-city.pilot circle { fill: #a8722e; stroke: var(--wash); stroke-width: 3; }
+  .w-city.pilot text { font-weight: 700; fill: var(--fg); font-size: 11px; }
+  .w-ring { fill: none; stroke: #a8722e; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .slide.active .w-ring { animation: ring 3s 1.2s ease-out infinite; }
+
+  /* Bleed photos */
+  .bleed { position: absolute; inset: 0; z-index: -2; }
+  .bleed img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.6); transform: scale(1.04); }
+  .slide.active .bleed img { animation: drift 14s ease-in-out both; }
+  @keyframes drift { from { transform: scale(1.12); } to { transform: scale(1.04); } }
+  .bleed::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(244,244,249,0.72), rgba(244,244,249,0.96)); }
+  .bleed-credit { position: absolute; right: calc(16px + env(safe-area-inset-right, 0px)); top: 14px; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--muted); }
+  .credits { position: absolute; bottom: calc(60px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; text-align: center; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.03em; padding-inline: 16px; }
+
+  /* Chrome */
+  .progress { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; height: 2px; width: 100%; transform: scaleX(0); transform-origin: left; background: var(--bronze); transition: transform 0.4s ease; z-index: 5; }
+  .brand { position: fixed; z-index: 5; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); left: calc(22px + env(safe-area-inset-left, 0px)); font-family: var(--display); font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em; color: var(--muted); }
+  .counter { position: fixed; z-index: 5; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); right: calc(22px + env(safe-area-inset-right, 0px)); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .nav { position: fixed; z-index: 5; display: flex; gap: 6px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); }
+  .nav button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; font-size: 1rem; }
+  .nav button:hover { border-color: var(--bronze); background: var(--wash); }
+  .nav button:focus-visible { outline: 2.5px solid var(--bronze); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deck { scroll-behavior: auto; }
+    .slide.active *, .slide.active *::before, .slide.active *::after { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .ripple-bg i { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="brand" aria-hidden="true">TapTales World</div>
+<div class="counter" id="counter" aria-live="polite"></div>
+<div class="nav" aria-label="Slide navigation">
+  <button type="button" id="prev" aria-label="Previous slide">&larr;</button>
+  <button type="button" id="next" aria-label="Next slide">&rarr;</button>
+</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 Title -->
+  <section class="slide active" id="s1">
+    <div class="bleed" aria-hidden="true"><img src="photos/warrior.jpg" alt=""></div>
+    <span class="bleed-credit">Warrior on Horseback, Skopje · Andrzej Wójtowicz, CC BY-SA 2.0</span>
+    <div class="ripple-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="slide__inner" style="text-align:center">
+      <div class="text">
+        <img class="logo" src="logo/taptales-column.png" alt="TapTales column mark">
+        <h1><span class="line"><span>TapTales</span></span></h1>
+        <p class="sub" style="margin-inline:auto">Tap a statue. Hear its story.<br>In any city on Earth.</p>
+        <p class="byline"><b>Luka Manojlovski</b> · FINKI · Innovations in ICT · 2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 Problem statement -->
+  <section class="slide" id="s2">
+    <div class="slide__inner has-figure">
+      <div class="text">
+        <p class="eyebrow">1 · The problem</p>
+        <h2><span class="line"><span>A visitor stands</span></span><span class="line"><span>before a statue</span></span><span class="line"><span>and learns <span class="bronze-word">nothing</span>.</span></span></h2>
+        <p class="sub">No plaque, or a plaque in a language they can't read. They photograph it, search, and walk on.</p>
+      </div>
+      <div class="figure"><div class="marks" id="marks" aria-hidden="true"></div></div>
+    </div>
+  </section>
+
+  <!-- 3 Problem evidence -->
+  <section class="slide dense" id="s3">
+    <div class="slide__inner has-figure figure-left wide">
+      <div class="text">
+        <p class="eyebrow">1 · Evidence <small>claims, evidence and assumptions kept apart</small></p>
+        <h2><span class="line"><span>650,000 statues and</span></span><span class="line"><span>memorials. Almost none</span></span><span class="line"><span>can introduce themselves.</span></span></h2>
+      </div>
+      <div class="figure">
+        <ul class="doors four wide" aria-label="Evidence for the problem">
+          <li class="ok"><b>Secondary · the scale</b><span><em>88,691</em> statues, <em>72,042</em> monuments and <em>518,078</em> memorials are mapped on OpenStreetMap (taginfo, Oct 2026). <em>1.4 billion</em> international tourist arrivals in 2024, 747 million in Europe (UN Tourism Barometer, Jan 2025).</span></li>
+          <li class="ok"><b>Primary · the Skopje field count</b><span>Walking all <em>122</em> statues of Skopje for the prototype: most have no explanatory plaque, and the few that exist are in the local language only.</span></li>
+          <li class="ok"><b>Behaviour · the prototype</b><span>Working prototype (Hacktoberfest 2026, Skopje): 122 statues, photo recognition for 102, 3D/AR, seven UI languages, offline. Tested on phones and jury.</span></li>
+          <li class="warn"><b>Assumption · still to test</b><span>That visitors will tap or scan when a plaque invites them, and that cities will pay for it. Both go into the validation plan.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Alternatives: evidence matrix -->
+  <section class="slide dense" id="s4">
+    <div class="slide__inner">
+      <div class="text" style="text-align:center">
+        <p class="eyebrow">2 · Alternatives <small>novelty is relative to the best current option</small></p>
+        <h2><span class="line"><span>Who already does part of this.</span></span></h2>
+      </div>
+      <div class="full">
+        <table class="table" aria-label="Innovation evidence matrix">
+          <thead><tr><th>Alternative</th><th>Target user</th><th>What it does</th><th>Strength</th><th>Weakness</th><th>Our difference</th></tr></thead>
+          <tbody>
+            <tr><td>Talking Statues<br><small>Copenhagen 2013 · 11 cities</small></td><td>City visitors</td><td>NFC/QR plaque on ~35 chosen statues plays a recorded monologue</td><td>Physical, charming, proven in 11 cities</td><td>Hand-picked few; one language; no map, recognition, 3D or collection; project-based</td><td>Every statue of the city, generated from open data; seven languages</td></tr>
+            <tr><td>Smartify<br><small>"Shazam for art"</small></td><td>Museum visitors</td><td>Photo recognition of artworks in partner venues</td><td>Millions of users; large catalogue</td><td>Only where the venue has uploaded its collection; indoors; needs a server and internet</td><td>On-device open model, outdoors, offline, no venue onboarding</td></tr>
+            <tr><td>GPS audio tours<br><small>izi.TRAVEL, SmartGuide, VoiceMap</small></td><td>Self-guided tourists</td><td>Location-triggered audio for a route</td><td>Hundreds of cities</td><td>Paid; nothing physical at the statue; centre only; no 3D, no collection</td><td>Free for the visitor; the plaque is the trigger; whole city</td></tr>
+            <tr><td>Munzee, Geocaching</td><td>Players</td><td>Scan codes in the world to score</td><td>Collection mechanic works</td><td>Game only, no heritage content</td><td>Same motivation, real stories</td></tr>
+            <tr><td>Do nothing<br><small>search on the phone</small></td><td>Everyone today</td><td>Type the name you can't read</td><td>Free, always there</td><td>2–3 minutes, often wrong statue or wrong person</td><td>Answer in under five seconds, standing there</td></tr>
+            <tr class="us"><td>TapTales</td><td>City visitors; cities pay</td><td>Tap or photograph any statue → story, voice, 3D/AR, collection, map</td><td>Whole city from open data in weeks; no app to install</td><td>Plaques need a permit; prototype in one city</td><td>The combination, city-wide, generated for any city</td></tr>
+          </tbody>
+        </table>
+        <p class="table-note">Sources: Talking Statues (talkingstatues.com, University of Leicester RCMG), Smartify (CORDIS 781928), app stores, Google Patents search Oct 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 The claim -->
+  <section class="slide" id="s5">
+    <div class="slide__inner">
+      <div class="text" style="text-align:center">
+        <p class="eyebrow">2 · The innovation claim in one sentence</p>
+        <h2><span class="line"><span>What is actually new.</span></span></h2>
+        <p class="claim">For <b>city visitors</b> who struggle to learn who a statue shows and why, <b>TapTales</b> differs from <u>Talking Statues</u> and <u>Smartify</u> by <b>generating a complete guide for every statue of any city from open data</b>, delivered by a physical tap or an on-device photo match, creating <b>a city-wide guide in weeks instead of 35 hand-picked statues in years</b>, free for the visitor and cheaper than a custom app for the city.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 Type and level of novelty -->
+  <section class="slide dense" id="s6">
+    <div class="slide__inner has-figure">
+      <div class="text">
+        <p class="eyebrow">2 · Type and level of novelty</p>
+        <h2><span class="line"><span>Each part exists.</span></span><span class="line"><span>The combination,</span></span><span class="line"><span>city-wide, does not.</span></span></h2>
+        <p class="sub">We claim the combination and the process, never the parts.</p>
+      </div>
+      <div class="figure">
+        <ul class="doors four" aria-label="Classification of the innovation">
+          <li><b>Product / service innovation</b><span>a guide that covers every statue of a city, with tap, photo, voice, 3D/AR and a collection</span></li>
+          <li><b>Process innovation</b><span>an open pipeline (OpenStreetMap + Wikidata + Commons + Wikipedia) that generates a city in weeks, not months of curation</span></li>
+          <li><b>Business-model innovation</b><span>free for visitors; cities pay a per-city onboarding and licence instead of building their own app</span></li>
+          <li><b>Level: new to the world for the combination</b><span>incremental for every single part. Degree of change: a capability leap for small and mid-sized cities that could never afford a guide</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 The product -->
+  <section class="slide" id="s7">
+    <div class="slide__inner has-figure figure-left">
+      <div class="text">
+        <p class="eyebrow">3 · The product</p>
+        <h2><span class="line"><span>Tap the plaque,</span></span><span class="line"><span>or take a photo.</span></span></h2>
+        <p class="sub">Story in your language, a voice, 3D you can place in front of you, and the statue joins your collection.</p>
+      </div>
+      <div class="figure">
+        <ul class="product" aria-label="What the visitor gets">
+          <li><img src="photos/tap-plaque.webp" alt="Phone tapping an NFC plaque in front of a statue" style="object-position:50% 80%"><span>Tap<small>NFC plaque opens the statue, no app</small></span></li>
+          <li><img src="photos/teresa.jpg" alt="Mother Teresa statue"><span>Listen<small>voice guide, seven languages</small></span></li>
+          <li><img src="photos/warrior.jpg" alt="Warrior on Horseback"><span>See it in 3D<small>AR for the headline statues</small></span></li>
+          <li><img src="photos/cyril.jpg" alt="Saints Cyril and Methodius"><span>Collect<small>only a tap or a photo counts</small></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 Value: baseline → target -->
+  <section class="slide dense" id="s8">
+    <div class="slide__inner has-figure">
+      <div class="text">
+        <p class="eyebrow">3 · Value <small>baseline → target, measured in the pilot</small></p>
+        <h2><span class="line"><span>Why the difference</span></span><span class="line"><span>matters.</span></span></h2>
+        <p class="sub">For <b>visitors</b>: time and quality. For <b>cities</b>: cost, coverage and data they never had.</p>
+      </div>
+      <div class="figure">
+        <ul class="metrics" aria-label="Value metrics with baseline and target">
+          <li><span>Time to “who is this?”</span><span class="base">2–3 min searching</span><span class="arrow">→</span><span class="target">&lt; 5 s</span></li>
+          <li><span>Statues covered per city</span><span class="base">~35 (Talking Statues)</span><span class="arrow">→</span><span class="target">every statue</span></li>
+          <li><span>Cost to the city per statue</span><span class="base">custom app €30k+</span><span class="arrow">→</span><span class="target">≈ €60 + licence</span></li>
+          <li><span>Languages at the statue</span><span class="base">1 (the plaque)</span><span class="arrow">→</span><span class="target">7</span></li>
+          <li><span>Visit data for the city</span><span class="base">none</span><span class="arrow">→</span><span class="target">taps per statue, monthly</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 Architecture -->
+  <section class="slide dense" id="s9">
+    <div class="slide__inner">
+      <div class="text" style="text-align:center">
+        <p class="eyebrow">4 · Technical feasibility <small>only the components that matter to novelty</small></p>
+        <h2><span class="line"><span>A web app, a plaque and an open pipeline.</span></span></h2>
+      </div>
+      <div class="full">
+        <ol class="arch" aria-label="Architecture">
+          <li><b>Visitor</b><span>any phone made after 2018 reads NFC; nothing to install</span></li>
+          <li class="ext"><b>NFC plaque / camera</b><span>passive sticker with a link; or a photo when there is no plaque</span></li>
+          <li><b>PWA in the browser</b><span>React + TypeScript; installs from the browser; map, 3D, voice, collection; works offline</span></li>
+          <li class="novel"><b>On-device recognition</b><span>DINOv2 embeddings compared on the phone against the city's reference set; no server, no upload</span></li>
+          <li class="novel"><b>Open data pipeline</b><span>OSM + Wikidata + Commons + Wikipedia → statues, facts, photos, stories for any city; reviewed by a human</span></li>
+          <li class="ext"><b>Static hosting + AR</b><span>CDN for content and 3D models; AR Quick Look / WebXR; city permit for plaques</span></li>
+        </ol>
+        <p class="arch-key"><span><i style="background:#a8722e"></i>where the novelty lives</span><span><i style="background:var(--bronze)"></i>standard components</span><span><i style="background:#fff;border:1.5px solid var(--bronze)"></i>external</span><span>Hardest uncertainty: recognition accuracy outdoors in bad light, and whether the pipeline holds in cities with thin Wikidata coverage.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 Development stage -->
+  <section class="slide dense" id="s10">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">4 · Development stage, stated honestly</p>
+        <h2><span class="line"><span>Prototype today.</span></span><span class="line"><span>Pilot in three countries by month 9.</span></span></h2>
+      </div>
+      <ol class="stages full" aria-label="Development stages">
+        <li class="done"><b>Concept</b><span>idea defined, Sept 2026</span></li>
+        <li class="done"><b>POC</b><span>recognition on the phone works, NFC link opens the statue</span></li>
+        <li class="now"><b>Prototype</b><span>integrated demo: 122 statues of Skopje, 3D/AR, voice, map, collection, 7 languages, offline</span></li>
+        <li class="next"><b>Pilot ← this project</b><span>Skopje, Belgrade, Thessaloniki: 120 plaques, 3 languages of content, 300 visitors measured</span></li>
+        <li><b>Ready</b><span>any city onboarded from open data in weeks; licence signed</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 11 Validation -->
+  <section class="slide dense" id="s11">
+    <div class="slide__inner">
+      <div class="text" style="text-align:center">
+        <p class="eyebrow">5 · Validation <small>hypothesis · test · metric · decision</small></p>
+        <h2><span class="line"><span>What would prove us wrong.</span></span></h2>
+      </div>
+      <div class="full">
+        <table class="table" aria-label="Validation log">
+          <thead><tr><th>We believe…</th><th>Test</th><th>Metric</th><th>Pass</th><th>If it fails</th></tr></thead>
+          <tbody>
+            <tr><td>Visitors tap or scan when a plaque invites them</td><td>Operational: 40 plaques per pilot city, 3 months</td><td>Taps + scans per plaque per day; share of visitors who open a second statue</td><td>≥ 5 / day on the headline statues; ≥ 40 % open a second</td><td>Redesign the plaque and placement; QR-first</td></tr>
+            <tr><td>Recognition works outdoors, on real phones</td><td>Technical: 600 field photos, day / dusk / rain, 3 cities</td><td>Top-1 accuracy; time to result</td><td>≥ 90 %; &lt; 2 s</td><td>Show three candidates for the visitor to confirm</td></tr>
+            <tr><td>The open-data pipeline generalises beyond Skopje</td><td>Benchmark: generate 10 cities on 4 continents, unsupervised</td><td>Share of statues with name, photo and a story source</td><td>≥ 80 % in Europe, ≥ 60 % elsewhere</td><td>Add a city-editor mode for local volunteers</td></tr>
+            <tr><td>Cities will pay for onboarding + licence</td><td>Willingness to pay: offer to 10 cities and tourism boards with pilot data</td><td>Signed letters of interest; first licence</td><td>≥ 3 LOIs, 1 licence by month 12</td><td>Switch to sponsor-funded routes and heritage grants</td></tr>
+            <tr><td>Visitors find it worth it</td><td>Usability: 300 visitors, in-app survey + observation</td><td>Satisfaction; completion of a statue page</td><td>≥ 4 / 5; ≥ 70 % finish the story</td><td>Shorten stories, voice first</td></tr>
+          </tbody>
+        </table>
+        <p class="table-note">The cheapest test that answers each question. Every decision is continue, change or stop; a failed hypothesis is a result, not a failure of the project.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 Business model canvas -->
+  <section class="slide dense" id="s12">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">6 · Business model <small>who uses, who pays, why they adopt</small></p>
+        <h2><span class="line"><span>Visitors use it free. Cities pay per city.</span></span></h2>
+      </div>
+      <div class="canvas full" aria-label="Business model canvas">
+        <div class="tall"><b>Key partners</b>OpenStreetMap and Wikimedia communities · universities in each pilot city (students collect photos) · plaque manufacturer · 3D-scanning studio · city heritage offices</div>
+        <div><b>Key activities</b>onboarding cities from open data · plaque design and installation · content review and translation · sales to cities</div>
+        <div class="vp"><b>Value proposition</b>For cities: every statue explained in seven languages, in weeks, for the price of plaques and a licence, with visit data, no app to build. For visitors: tap or snap, hear the story, free, no install, offline.</div>
+        <div><b>Customer relationships</b>pilot together · annual report of taps and routes · self-serve content corrections</div>
+        <div class="tall"><b>Customer segments</b>Pay: cities, municipalities, tourism boards, park and heritage authorities. Use: foreign and domestic tourists, residents, schools.</div>
+        <div><b>Key resources</b>the pipeline and recognition model · the PWA · reviewed stories and 3D models · the TapTales trademark</div>
+        <div><b>Channels</b>direct sales with an on-site demo · every plaque advertises the app · tourism fairs · the pilot cities as references</div>
+        <div class="bottom"><b>Cost structure</b>developers · content reviewers and translators · plaques and installation · 3D scanning · hosting (static, cheap) · travel to cities</div>
+        <div class="bottom wide3"><b>Revenue streams</b>one-off city onboarding ≈ €60 per statue (avg €7,000) · annual licence €6–12k per city (avg €8,000) · add-ons: 3D model €600, new language €1,500, sponsored walk €2,000 / year. Visitors never pay.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 Market from assumptions -->
+  <section class="slide dense" id="s13">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">6 · Market size from assumptions <small>traceability, not false precision</small></p>
+        <h2><span class="line"><span>Reachable cities × adoption × price.</span></span></h2>
+      </div>
+      <div class="formula full" aria-label="Revenue hypothesis">
+        <div><small>Reachable cities</small><b>≈ 4,000</b><span>cities with 100,000+ people worldwide (UN World Urbanization Prospects); ≈ 800 of them in Europe, our first market</span></div>
+        <div><small>Adoption by year 5</small><b>45 cities</b><span>≈ 1 % of the world, ≈ 5 % of Europe; a city in each pilot country first, then neighbours</span></div>
+        <div><small>Price per city per year</small><b>€8,000</b><span>licence; plus €7,000 one-off onboarding for every new city</span></div>
+        <div><small>Add-ons</small><b>+10 %</b><span>3D models, new languages, sponsored walks, on top of licences</span></div>
+        <div class="result"><small>Year-5 revenue hypothesis</small><b>€536,000</b><span>45 × €8,000 + 20 new × €7,000 + 10 % add-ons. Pessimistic: half the cities, €268k. Optimistic: 1.5×, €804k.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 World map -->
+  <section class="slide" id="s14">
+    <div class="slide__inner">
+      <div class="text" style="text-align:center">
+        <p class="eyebrow">Vision</p>
+        <h2><span class="line"><span>Three pilot cities. Then any city.</span></span></h2>
+      </div>
+      <div class="world full"><svg viewBox="0 0 1000 420" role="img" aria-label="World map with the three pilot cities Skopje, Belgrade and Thessaloniki and target cities on every continent" id="worldmap"></svg></div>
+    </div>
+  </section>
+
+  <!-- 15 Project plan -->
+  <section class="slide dense" id="s15">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">7 · Project plan <small>objective → activity → output → evidence of completion</small></p>
+        <h2><span class="line"><span>Twelve months, four milestones.</span></span></h2>
+      </div>
+      <ol class="timeline full" aria-label="Milestones">
+        <li><i></i><b>M1 <small>Q1 · discover + design</small></b><span>Pipeline generalised and benchmarked on 10 cities; plaque designed; permits requested in 3 cities; two developers hired<em>Evidence: benchmark report, permit letters</em></span></li>
+        <li><i></i><b>M2 <small>Q2 · build</small></b><span>Content reviewed in Macedonian, Serbian, Greek and English for 3 cities; 9 headline statues scanned in 3D; recognition tested on 600 field photos<em>Evidence: content live, accuracy report ≥ 90 %</em></span></li>
+        <li><i></i><b>M3 <small>Q3 · test</small></b><span>120 plaques installed; pilot with 300 visitors; taps and routes measured<em>Evidence: pilot report, validation log filled</em></span></li>
+        <li><i></i><b>M4 <small>Q4 · improve + launch</small></b><span>Fixes from the pilot; trademark filed; offer sent to 10 cities; launch with the three partner cities<em>Evidence: ≥ 3 letters of interest, first licence</em></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 16 Budget -->
+  <section class="slide dense" id="s16">
+    <div class="slide__inner has-figure">
+      <div class="text">
+        <p class="eyebrow">7 · Budget <small>every euro serves an activity</small></p>
+        <h2><span class="line"><span>€35,295.</span></span><span class="line"><span>€30,000 from the Fund,</span></span><span class="line"><span>€5,295 our own.</span></span></h2>
+        <p class="sub">85 / 15, cash-based, spent by quarter when the activity happens.</p>
+      </div>
+      <div class="figure">
+        <div class="cost" aria-label="Budget by line">
+          <div class="row"><span>Two developers, 12 months<small>app + pipeline; Q1–Q4</small></span><b>€16,000</b></div>
+          <div class="row"><span>120 NFC plaques, made and installed<small>40 per pilot city; Q2–Q3</small></span><b>€4,500</b></div>
+          <div class="row"><span>3D scanning, 9 headline statues + hosting<small>subcontract ≤ 30 %; Q2</small></span><b>€5,000</b></div>
+          <div class="row"><span>Heritage reviewers and translators<small>experts ≤ 10 %; Q1–Q2</small></span><b>€3,000</b></div>
+          <div class="row"><span>Trademark (Madrid system), legal<small>consultants ≤ 5 %; Q4</small></span><b>€1,500</b></div>
+          <div class="row"><span>Pilot travel in 3 cities, promotion<small>Q3–Q4</small></span><b>€3,795</b></div>
+          <div class="row"><span>Contingency<small>≤ 5 %</small></span><b>€1,500</b></div>
+          <div class="row total"><span>Total</span><b>€35,295</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 Forecast -->
+  <section class="slide dense" id="s17">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">7 · Five-year forecast <small>computed live from the assumptions on this slide</small></p>
+        <h2><span class="line"><span>Loss in the grant year, profit from year 3.</span></span></h2>
+      </div>
+      <div class="full">
+        <table class="table" aria-label="Five-year financial forecast" id="forecast"></table>
+        <p class="table-note" id="forecast-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 Risks + responsible ICT -->
+  <section class="slide dense" id="s18">
+    <div class="slide__inner">
+      <div class="text">
+        <p class="eyebrow">Risks <small>each with a specific response</small></p>
+        <h2><span class="line"><span>What can go wrong, and what we do then.</span></span></h2>
+      </div>
+      <ul class="doors six wide full" aria-label="Risks and mitigations">
+        <li><b>Tech · recognition fails in bad light</b><span>the plaque is primary, recognition is the fallback; more reference photos per statue; show three candidates to confirm</span></li>
+        <li><b>Market · cities don't buy after the pilot</b><span>pilot with the city from day one; licence priced below a custom app; sponsored walks and heritage grants as a second revenue line</span></li>
+        <li><b>Legal · permits and content rights</b><span>permit before plaques are ordered; only open-licensed data (ODbL, CC0, CC BY-SA) with attribution; non-invasive stick-on plaques</span></li>
+        <li><b>Team · a student founder</b><span>mentoring from FINKI and the Base42 incubator; accounting and legal outsourced; quarterly plan and budget review</span></li>
+        <li><b>Partner · pipeline thin outside Europe</b><span>benchmark first (M1); city-editor mode so local volunteers and universities fill the gaps</span></li>
+        <li class="ok"><b>Responsible ICT</b><span>photos processed on the phone and never uploaded; no location stored; anonymous counts only; voice guide for visually impaired visitors; passive plaques, no batteries, no recognition servers</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 19 IP -->
+  <section class="slide dense" id="s19">
+    <div class="slide__inner has-figure">
+      <div class="text">
+        <p class="eyebrow">IP <small>searched before we claimed</small></p>
+        <h2><span class="line"><span>No patent covers</span></span><span class="line"><span>the whole. We protect</span></span><span class="line"><span>the <span class="accent">name</span>, not the idea.</span></span></h2>
+        <p class="sub">Google Patents, WIPO and product search, October 2026.</p>
+      </div>
+      <div class="figure">
+        <ul class="doors four" aria-label="Prior art and IP strategy">
+          <li><b>Prior art found</b><span>Talking Statues (2013) is published practice, so “NFC plaque on a statue” is nobody's to patent. Google US 8,810,599 / US 8,890,896 claim server-side image matching for device positioning; Universal US 12,705,994 needs a beacon-triggered camera and LLM text. We do none of these.</span></li>
+          <li><b>Freedom to operate</b><span>no EP or WO family found for NFC + heritage + 3D; Chinese scenic-spot patents (CN104298965A, CN109036228A) are territorial and don't combine the parts</span></li>
+          <li><b>What we protect</b><span>trademark “TapTales” and the column mark (national office, then Madrid system); copyright on stories, voice scripts and 3D models</span></li>
+          <li><b>What we open</b><span>core app under an open licence (a selling point to cities: no vendor lock-in); data reused under ODbL / CC with attribution</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 Team and ask -->
+  <section class="slide" id="s20">
+    <div class="slide__inner has-figure figure-left">
+      <div class="text">
+        <p class="eyebrow">Team and the ask</p>
+        <h2><span class="line"><span>One founder,</span></span><span class="line"><span>two hires,</span></span><span class="line"><span>three cities.</span></span></h2>
+        <p class="sub">€30,000 from the Fund turns a prototype in one city into a pilot in three countries and the first licence.</p>
+      </div>
+      <div class="figure">
+        <ul class="doors" aria-label="Team">
+          <li><b>Luka Manojlovski · founder</b><span>FINKI, software engineering · product, cities, pilot · 100 %</span></li>
+          <li><b>Developer 1 · app</b><span>React/TypeScript PWA, map, 3D/AR, languages, accessibility · new hire</span></li>
+          <li><b>Developer 2 · data + recognition</b><span>pipeline for any city, DINOv2 on-device model, field testing · new hire</span></li>
+          <li><b>Heritage reviewers · per city</b><span>a historian in each pilot city checks every story, with sources · contract</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 Close -->
+  <section class="slide" id="s21">
+    <div class="bleed" aria-hidden="true"><img src="photos/justinian.jpg" alt=""></div>
+    <span class="bleed-credit">Justinian I, Skopje · Pudelek (Marcin Szala), CC BY-SA 3.0</span>
+    <div class="ripple-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="slide__inner" style="text-align:center">
+      <div class="text">
+        <img class="logo" src="logo/taptales-column.png" alt="TapTales column mark">
+        <h1><span class="line"><span>TapTales</span></span></h1>
+        <p class="sub" style="margin-inline:auto">Every statue, every city, one tap.</p>
+        <p class="byline"><b>Luka Manojlovski</b> · Innovations in ICT · FINKI 2026</p>
+      </div>
+    </div>
+    <p class="credits">Photos from Wikimedia Commons, credited on each slide (Andrzej Wójtowicz, Mister No, Pudelek, Yemc; CC BY / CC BY-SA). Map: Natural Earth via world-atlas (public domain). Counts: taginfo.openstreetmap.org; UN Tourism World Tourism Barometer.</p>
+  </section>
+
+</main>
+
+<script>
+  // Slide 2: a field of 128 marks, a handful lit: the statues that explain themselves
+  (function () {
+    var box = document.getElementById('marks');
+    var lit = new Set([3, 17, 44, 71, 99, 123]);
+    for (var i = 0; i < 128; i++) {
+      var d = document.createElement('i');
+      d.style.animationDelay = (i * 9) + 'ms';
+      if (lit.has(i)) d.className = 'lit';
+      box.appendChild(d);
+    }
+  })();
+
+  // Slide 14: world map (Natural Earth 110m, equirectangular, 84N..60S), pilot and target cities
+  (function () {
+    var svg = document.getElementById('worldmap');
+    var ns = 'http://www.w3.org/2000/svg';
+    function el(tag, attrs, parent) { var e = document.createElementNS(ns, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+    function xy(lon, lat) { return [(lon + 180) / 360 * 1000, (84 - lat) / 144 * 500 - 40]; }
+    var pilots = [['Skopje', 21.43, 42.0, 'end', -12, 14], ['Belgrade', 20.46, 44.8, 'end', -12, -6], ['Thessaloniki', 22.94, 40.64, 'start', 12, 12]];
+    var targets = [['Lisbon', -9.14, 38.7], ['London', -0.13, 51.5], ['Berlin', 13.4, 52.5], ['Rome', 12.5, 41.9], ['Istanbul', 28.98, 41.0], ['Cairo', 31.2, 30.0],
+      ['New York', -74.0, 40.7], ['Mexico City', -99.13, 19.43], ['Toronto', -79.4, 43.7], ['São Paulo', -46.6, -23.5], ['Buenos Aires', -58.4, -34.6],
+      ['Nairobi', 36.8, -1.3], ['Cape Town', 18.42, -33.9], ['Delhi', 77.2, 28.6], ['Singapore', 103.8, 1.3], ['Seoul', 127.0, 37.6], ['Tokyo', 139.7, 35.7], ['Sydney', 151.2, -33.9]];
+    fetch('geo/world.json').then(function (r) { return r.json(); }).then(function (m) {
+      var g = el('g', { transform: 'translate(0,-40)' });
+      el('path', { d: m.land, 'class': 'w-land' }, g);
+      targets.forEach(function (t, i) {
+        var p = xy(t[1], t[2]);
+        var c = el('g', { 'class': 'w-city' });
+        c.style.animationDelay = (1.4 + i * 0.08) + 's';
+        el('circle', { cx: p[0], cy: p[1], r: 3.2 }, c);
+        var tx = el('text', { x: p[0] + 6, y: p[1] + 4 }, c); tx.textContent = t[0];
+      });
+      pilots.forEach(function (t, i) {
+        var p = xy(t[1], t[2]);
+        el('circle', { cx: p[0], cy: p[1], r: 14, 'class': 'w-ring', 'stroke-width': 1.5 });
+        var c = el('g', { 'class': 'w-city pilot' });
+        c.style.animationDelay = (0.9 + i * 0.15) + 's';
+        el('circle', { cx: p[0], cy: p[1], r: 4.5 }, c);
+        var tx = el('text', { x: p[0] + t[4], y: p[1] + t[5], 'text-anchor': t[3] }, c); tx.textContent = t[0];
+      });
+    });
+  })();
+
+  // Slide 17: the forecast, derived from the assumptions so the numbers can never drift from them
+  (function () {
+    var A = { cities: [2, 5, 12, 25, 45], newCities: [2, 3, 7, 13, 20], licence: 8000, onboarding: 7000, addons: 0.10,
+      cops: 0.35, staff: [2, 3, 4, 6, 9], salary: 1500 * 12, raise: 0.05, marketing: 0.05, marketingMin: 2000, admin: 2400, tax: 0.10 };
+    var rows = [];
+    for (var y = 0; y < 5; y++) {
+      var licences = A.cities[y] * A.licence;
+      var onboarding = y === 0 ? 0 : A.newCities[y] * A.onboarding;   // the pilot cities are onboarded by the grant, not billed
+      var addons = Math.round(licences * A.addons);
+      var income = licences + onboarding + addons;
+      var cops = Math.round(income * A.cops);
+      var gross = income - cops;
+      var salaries = Math.round(A.staff[y] * A.salary * Math.pow(1 + A.raise, y));
+      var marketing = Math.max(A.marketingMin, Math.round(income * A.marketing));
+      var other = salaries + marketing + A.admin;
+      var ebt = gross - other;
+      var tax = ebt > 0 ? Math.round(ebt * A.tax) : 0;
+      rows.push({ y: y + 1, cities: A.cities[y], income: income, cops: cops, gross: gross, other: other, ebt: ebt, net: ebt - tax, staff: A.staff[y] });
+    }
+    function eur(n) { var s = Math.abs(n).toLocaleString('en-US'); return (n < 0 ? '−' : '') + '€' + s; }
+    function cell(n, cls) { return '<td class="num' + (n < 0 ? ' neg' : '') + (cls ? ' ' + cls : '') + '">' + eur(n) + '</td>'; }
+    var head = '<thead><tr><th>Year</th><th class="num">Cities licensed</th><th class="num">Staff</th><th class="num">Income</th><th class="num">Cost of product (35 %)</th><th class="num">Gross profit</th><th class="num">Other costs</th><th class="num">Profit before tax</th><th class="num">Net profit</th></tr></thead>';
+    var body = rows.map(function (r) {
+      return '<tr><td>Year ' + r.y + '</td><td class="num">' + r.cities + '</td><td class="num">' + r.staff + '</td>' + cell(r.income) + cell(r.cops) + cell(r.gross) + cell(r.other) + cell(r.ebt) + cell(r.net, 'strong') + '</tr>';
+    }).join('');
+    document.getElementById('forecast').innerHTML = head + '<tbody>' + body + '</tbody>';
+    document.getElementById('forecast-note').textContent = 'Assumptions: licensed cities ' + A.cities.join(' / ') + '; licence €' + A.licence.toLocaleString('en-US') + ' per city per year; onboarding €' + A.onboarding.toLocaleString('en-US') + ' per new city (the pilot cities in year 1 are funded by the project); add-ons 10 % of licences; cost of product 35 % (content, plaques, scanning, hosting, travel); staff ' + A.staff.join(' / ') + ' people at €1,500 gross per month, +5 % a year; marketing 5 % of income, min €2,000; admin €2,400; profit tax 10 %. Year-1 loss is covered by the grant and own funds; no dividend before year 4.';
+  })();
+
+  // Navigation + active state
+  (function () {
+    var deck = document.getElementById('deck');
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var progress = document.getElementById('progress'), counter = document.getElementById('counter');
+    var current = 0;
+    function setActive(i) {
+      if (i === current && slides[i].classList.contains('active')) return;
+      slides.forEach(function (s, j) { s.classList.toggle('active', j === i); });
+      current = i;
+      progress.style.transform = 'scaleX(' + ((i + 1) / slides.length) + ')';
+      counter.textContent = (i + 1) + ' / ' + slides.length;
+      try { history.replaceState(null, '', '#' + slides[i].id); } catch (e) {}
+    }
+    counter.textContent = '1 / ' + slides.length;
+    function go(i) { i = Math.max(0, Math.min(slides.length - 1, i)); slides[i].scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > 0.6) setActive(slides.indexOf(e.target)); });
+    }, { root: deck, threshold: [0.6] });
+    slides.forEach(function (s) { io.observe(s); });
+    document.getElementById('next').addEventListener('click', function () { go(current + 1); });
+    document.getElementById('prev').addEventListener('click', function () { go(current - 1); });
+    window.addEventListener('keydown', function (e) {
+      if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); go(current + 1); }
+      if (['ArrowLeft', 'ArrowUp', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); go(current - 1); }
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(slides.length - 1);
+    });
+    deck.addEventListener('click', function (e) {
+      if (e.target.closest('button, a, table')) return;
+      var x = e.clientX / window.innerWidth;
+      if (x > 0.7) go(current + 1); else if (x < 0.3) go(current - 1);
+    });
+    var h = (location.hash || '').replace('#', '');
+    var idx = slides.findIndex(function (s) { return s.id === h; });
+    if (idx > 0) {
+      var jump = function () { deck.style.scrollBehavior = 'auto'; deck.scrollTop = slides[idx].offsetTop; setActive(idx); requestAnimationFrame(function () { deck.style.scrollBehavior = ''; }); };
+      jump(); requestAnimationFrame(jump); window.addEventListener('load', function () { setTimeout(jump, 50); });
+    }
+  })();
+</script>
+</body>
+</html>
